@@ -4,5 +4,5 @@ import abc
 class AbstractScheme(abc.ABC):
     @staticmethod
     @abc.abstractmethod
-    def get_score(self, preferences):
+    def get_score(self, preferences, candidates):
         pass
