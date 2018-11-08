@@ -5,7 +5,7 @@ from votingSchemes.AntiPlurality import AntiPlurality as AP
 from votingSchemes.VotingForTwo import VotingForTwo as VT
 from HappinessScore import HappinessScore as Hap
 from tacticalVoting.BulletVoting import BulletVoting as BV
-
+from tacticalVoting.Compromising import Compromising as Com
 import numpy
 
 def main():
@@ -18,23 +18,19 @@ def main():
     candidates = [a, b, c, d, e]
     preferences = numpy.array([
         [a, b, c, d, e],
-        [a, b, c, d, e],
-        [b, a, d, e, c],
-        [d, a, b, e, c],
-        [d, a, b, e, c],
-        [d, a, b, e, c],
-        [e, d, b, c, a],
-        [e, d, b, c, a],
-        [e, d, b, c, a],
-        [b, d, e, c, a]
+        [a, d, b, c, e],
+        [d, a, b, c, e],
+        [b, d, c, e, a],
+        [d, a, b, c, e]
     ]).T
 
     outcome = BU.get_scores(preferences, candidates)
 
     happiness, happiness_sum = Hap.get_scores(outcome, candidates, preferences)
 
-
-    bla = BV.get_voting(outcome, candidates, preferences, happiness, BU)
+    outcome = BU.get_scores(preferences, candidates)
+    happiness = Hap.get_scores(outcome, candidates, preferences)
+    Com.get_scores(outcome,preferences,candidates,happiness)
 
 
 if __name__ == '__main__':
