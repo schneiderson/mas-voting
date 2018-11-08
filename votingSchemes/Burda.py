@@ -6,5 +6,7 @@ class Burda(AbstractScheme):
 
     @staticmethod
     def get_score(preferences, candidates):
-        return [((preferences == y).astype(int) * np.array([4, 3, 2, 1, 0]).reshape(5, 1)).sum() for y in candidates]
+        l = len(candidates)
+        factor = np.array(list(range(5, 0, -1))).reshape(l, 1)
+        return [((preferences == y).astype(int) * factor).sum() for y in candidates]
 
