@@ -1,9 +1,8 @@
 import numpy as np
 from HappinessScore import HappinessScore as Hap
 
-
 class Bury(object):
-    def __init__(self, outcome, scheme, candidates, preferences):
+    def __init__(self, outcome, candidates, preferences, scheme):
         self.outcome = outcome
         self.scheme = scheme
         self.candidates = candidates
@@ -26,7 +25,7 @@ class Bury(object):
 
                 if new_happiness > self.happiness[0][voter_id]:
                     temp_dict = {
-                        "pref": temp_pref,
+                        "pref": pref,
                         "happiness": new_happiness
                     }
 
@@ -34,6 +33,7 @@ class Bury(object):
                         possible_strategies[voter_id] = possible_strategies[voter_id].append(temp_dict)
                     else:
                         possible_strategies[voter_id] = [temp_dict]
+
         return possible_strategies
 
     def alter_pref(self, pref):
@@ -44,7 +44,7 @@ class Bury(object):
         return [pref]
 
     def get_outcome(self, preferences):
-        return self.scheme.get_scores(preferences)
+        return self.scheme.get_scores(preferences, self.candidates)
 
     def get_new_happiness(self, outcome, voter_id):
         return Hap.get_scores(outcome, self.candidates, self.preferences)[0][voter_id]
