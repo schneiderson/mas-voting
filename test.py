@@ -1,9 +1,9 @@
-from Preference import Preference as Pref
 from Candidate import Candidate as Can
 from votingSchemes.PluralityVote import PluralityVote as PL
 from votingSchemes.Burda import Burda as BU
 from votingSchemes.AntiPlurality import AntiPlurality as AP
 from votingSchemes.VotingForTwo import VotingForTwo as VT
+from HappinessScore import HappinessScore as Hap
 import numpy
 
 def main():
@@ -21,7 +21,10 @@ def main():
         [b, d, e, c, a]
     ]).T
 
-    print(VT.get_scores(preferences, candidates))
+    outcome = VT.get_scores(preferences, candidates)
+
+    print(Hap.get_scores(outcome, candidates, preferences))
+
 
 if __name__ == '__main__':
     main()
