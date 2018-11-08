@@ -1,17 +1,14 @@
 from votingSchemes.AbstractScheme import AbstractScheme
+import numpy as np
 
 
 class PluralityVote(AbstractScheme):
 
     @staticmethod
-    def get_score(preferences):
-        score = {}
-        for i, pref in enumerate(preferences):
-            most_preferred = pref.get_preferences()[0]
-            if most_preferred in score:
-                score[most_preferred] += 1
-            else:
-                score[most_preferred] = 1
+    def get_scores(preferences, candidates):
+        voting_vector = [0] * (len(candidates))
+        voting_vector[0] = 1
+        voting_vector = np.array(voting_vector).reshape(len(candidates), 1)
 
-        return score
+        return [((preferences == y).astype(int) * voting_vector).sum() for y in candidates]
 
