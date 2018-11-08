@@ -15,9 +15,9 @@ def main():
 
     preferences = numpy.array([[a, b, c, d, e], [b, a, d, e, c], [e, d, b, c, a], [b, d, e, c, a]])
 
-    print(prefs)
-    print(PL.get_score(prefs))
-    print(BU.get_score(prefs))
+    #print(pref)
+    #print(PL.get_score(prefs))
+    #print(BU.get_score(prefs))
 
 
 if __name__ == '__main__':
