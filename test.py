@@ -14,6 +14,7 @@ def main():
     e = Can('e')
 
     preferences = numpy.array([[a, b, c, d, e], [b, a, d, e, c], [e, d, b, c, a], [b, d, e, c, a]])
+    voting = numpy.array([[4, 3, 2, 1, 0], [3, 4, 0, 2, 1], [0, 2, 1, 3, 4], [0, 4, 1, 3, 2]])
 
     #print(pref)
     #print(PL.get_score(prefs))
