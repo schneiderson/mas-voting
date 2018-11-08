@@ -17,4 +17,5 @@ class Candidate(object):
         return self.__str__()
 
     def __eq__(self, other):
-        return self.name == other.name
+
+        return (isinstance(other, Candidate) and self.name == other.name)
