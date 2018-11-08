@@ -1,17 +1,10 @@
 from votingSchemes.AbstractScheme import AbstractScheme
+import numpy as np
 
 
 class Burda(AbstractScheme):
 
     @staticmethod
-    def get_score(preferences):
-        m = len(preferences[0].get_preferences())
-        score = {}
-        for i, pref in enumerate(preferences):
-            for j, c in enumerate(pref.get_preferences()):
-                if c in score:
-                    score[c] += m-j
-                else:
-                    score[c] = m-j
+    def get_score(preferences, candidates):
+        return [((preferences == y).astype(int) * np.array([4, 3, 2, 1, 0]).reshape(5, 1)).sum() for y in candidates]
 
-        return score
