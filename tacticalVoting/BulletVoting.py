@@ -1,5 +1,6 @@
 import numpy as np
 from HappinessScore import HappinessScore as Hap
+from tacticalVoting.Manipulation import Manipulation as Mani
 
 
 class BulletVoting(object):
@@ -12,13 +13,14 @@ class BulletVoting(object):
         # get indices of dissatisfied voters
         indices_dissat = np.setdiff1d(np.array(range(0, n)), indices_sat)
 
+        # Debug output TODO: remove...
         print("\nOutcome")
         print(outcome)
-
         print("\nPreferences")
         print(preferences)
-
         print()
+
+        manipulations = []
 
         for voter in indices_dissat:
             prefs = preferences.copy()
@@ -33,7 +35,7 @@ class BulletVoting(object):
             new_score = voting_scheme.get_scores(prefs, candidates)
 
             # calculate new happiness
-            new_happiness, new_happiness_sum = Hap.get_scores(new_score, candidates, preferences)
+            (new_happiness, new_happiness_sum) = Hap.get_scores(new_score, candidates, preferences)
 
             print("Voter: {}".format(voter))
             print("Old happiness: {}".format(happiness[voter]))
@@ -42,4 +44,17 @@ class BulletVoting(object):
             if new_happiness[voter] > happiness[voter]:
                 print("WARNING: Identified potential for bulletVoting for voter {}".format(voter))
 
+                manipulation = Mani("BulletVoting",
+                                    voting_scheme.get_name(),
+                                    voter,
+                                    preferences[voter],
+                                    prefs[voter],
+                                    happiness[voter],
+                                    new_happiness[voter],
+                                    outcome,
+                                    new_score
+                                    )
+                manipulations.append(manipulation)
+
+        return manipulations
 

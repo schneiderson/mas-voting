@@ -3,6 +3,11 @@ import numpy as np
 
 
 class VotingForTwo(AbstractScheme):
+
+    @staticmethod
+    def get_name(self):
+        return "VotingForTwo"
+
     @staticmethod
     def get_scores(preferences, candidates):
         voting_vector = [0] * (len(candidates))
