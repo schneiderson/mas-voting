@@ -21,13 +21,14 @@ def main():
         [a, c, b, d, e],
         [c, b, d, e, a],
         [b, d, c, e, a],
+        [b, d, c, e, a],
         [d, a, b, c, e]
     ]).T
 
     outcome = BU.get_scores(preferences, candidates)
     (happiness, happiness_sum) = Hap.get_scores(outcome, candidates, preferences)
 
-    Com.get_scores(outcome, candidates, preferences, happiness, BU)
+    Com.get_voting(outcome, candidates, preferences, happiness, BU)
 
 
 if __name__ == '__main__':

@@ -4,25 +4,32 @@ from HappinessScore import HappinessScore as Hap
 class Compromising:
     @staticmethod
     def get_voting(outcome, candidates, preferences, happiness, voting_scheme):
-        happy = happiness[0]
-        print(happy)
+        (m, n) = preferences.shape
+        winner = candidates[np.argmax(outcome)]
 
-        winner = max(happy)
         print(winner)
-        location = np.where(np.array([(winner != y).astype(int) for y in happy]) == 1)
-        index = [(winner == y).astype(int) for y in happy].index(1)
-        can = preferences.T[index][0]
+
+        print(preferences)
+
+        # get indices of dissatisfied voters
+        indices_dissat = np.argwhere(happiness < m-2).flatten()
+
+        print(indices_dissat)
+
+        print(winner)
+
         preferences = preferences.T
-        newPref = [0] * len(preferences)
-        hapScore = [0] * len(preferences)
-        outcomeList = [0] * len(preferences)
+        newPref = [0] * preferences.shape[0]
+        hapScore = [0] * preferences.shape[0]
+        outcomeList = [0] * preferences.shape[0]
+
         changed = []
         betterScore = False
         riskcount = 0
 
-        for x in location[0]:
+        for x in indices_dissat:
             newPref[x] = preferences[0].tolist()
-            winner_index = (preferences[x].tolist()).index(can)
+            winner_index = (preferences[x].tolist()).index(winner)
             first_pref = preferences[x][0]
             score = Hap.get_scores(outcome, candidates, preferences.T)[0][x]
             outcomeList[x] = outcome
