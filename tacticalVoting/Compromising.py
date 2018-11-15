@@ -7,42 +7,43 @@ class Compromising:
     @staticmethod
     def get_voting(outcome, candidates, preferences, happiness, voting_scheme):
         (m, n) = preferences.shape
+        # get winner
         winner = candidates[np.argmax(outcome)]
+
         # get indices of dissatisfied voters
+        # (exclude candidates for which winner is on personal pref. spot 1 or 2
+        #  --> in those cases compromising isn't possible)
         indices_dissat = np.argwhere(happiness < m-2).flatten()
+
+        # preferences
         preferences = preferences.T
-        newPref = [0] * preferences.shape[0]
-        outcomeList = [0] * preferences.shape[0]
         manipulations = []
 
-        for x in indices_dissat:
-            newPref[x] = preferences[0].tolist()
-            winner_index = (preferences[x].tolist()).index(winner)
-            first_pref = preferences[x][0]
-            score = Hap.get_scores(outcome, candidates, preferences.T)[0][x]
-            outcomeList[x] = outcome
+        # loop over remaining dissatisfied voters and check if compromising leads to higher happiness
+        for voter in indices_dissat:
+            winner_index = (preferences[voter].tolist()).index(winner)
+            first_pref = preferences[voter][0]
+
             for i in range(1, winner_index):
-                if i == winner_index:
-                    continue
-                preferences[x][0] = preferences[x][i]
-                preferences[x][i] = first_pref
-                new_outcome = voting_scheme.get_scores(preferences.T, candidates)
-                prefTemp = preferences[x].tolist()
-                preferences[x][i] = preferences[x][0]
-                preferences[x][0] = first_pref
-                newHappyness = Hap.get_scores(new_outcome, candidates, preferences.T)
-                if newHappyness[0][x] > score:
-                    print("WARNING: Identified potential for bulletVoting for voter {}".format(x))
+                new_preferences = preferences.copy()
+                new_preferences[voter][0] = preferences[voter][i]
+                new_preferences[voter][i] = first_pref
+                new_outcome = voting_scheme.get_scores(new_preferences.T, candidates)
+
+                (newHappiness, _) = Hap.get_scores(new_outcome, candidates, new_preferences.T)
+
+                if newHappiness[voter] > happiness[voter]:
 
                     manipulation = Mani("Compromising",
                                         voting_scheme.get_name(),
-                                        x,
-                                        preferences[x],
-                                        prefTemp,
-                                        score,
-                                        newHappyness[0][x],
+                                        voter,
+                                        preferences,
+                                        new_preferences,
+                                        happiness[voter],
+                                        newHappiness[voter],
                                         outcome,
                                         new_outcome
                                         )
                     manipulations.append(manipulation)
-        return 0
+
+        return manipulations
