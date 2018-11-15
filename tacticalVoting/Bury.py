@@ -50,7 +50,7 @@ class Bury(object):
 
                 if new_happiness > self.happiness[0][voter_id]:
                     temp_dict = {
-                        "pref": np.insert(temp_list, count, c),
+                        "new_pref": np.insert(temp_list, count, c),
                         "happiness": new_happiness,
                         "old_happiness": self.happiness[0][voter_id]
                     }
