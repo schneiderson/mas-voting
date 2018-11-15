@@ -30,7 +30,7 @@ class Compromising:
                 new_preferences[voter][i] = first_pref
                 new_outcome = voting_scheme.get_scores(new_preferences.T, candidates)
 
-                (newHappiness, _) = Hap.get_scores(new_outcome, candidates, new_preferences.T)
+                (newHappiness, _) = Hap.get_scores(new_outcome, candidates, preferences.T)
 
                 if newHappiness[voter] > happiness[voter]:
 

@@ -5,7 +5,8 @@ class HappinessScore(object):
     @staticmethod
     def get_scores(outcome, candidates, voter_pref):
         if outcome.count(np.max(outcome)) > 1:
-            print("WARNING: more than one winner!")
+            pass
+            # print("WARNING: more than one winner!")
 
         outcome_reversed = np.array(outcome) * -1
         winner = candidates[np.argsort(outcome_reversed)[0]]

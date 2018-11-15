@@ -5,7 +5,7 @@ import numpy as np
 class PluralityVote(AbstractScheme):
 
     @staticmethod
-    def get_name(self):
+    def get_name():
         return "PluralityVote"
 
     @staticmethod

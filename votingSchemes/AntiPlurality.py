@@ -5,7 +5,7 @@ import numpy as np
 class AntiPlurality(AbstractScheme):
 
     @staticmethod
-    def get_name(self):
+    def get_name():
         return "AntiPluralityVote"
 
     @staticmethod

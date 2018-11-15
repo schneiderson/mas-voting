@@ -5,7 +5,7 @@ import numpy as np
 class VotingForTwo(AbstractScheme):
 
     @staticmethod
-    def get_name(self):
+    def get_name():
         return "VotingForTwo"
 
     @staticmethod
