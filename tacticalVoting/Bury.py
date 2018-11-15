@@ -6,10 +6,9 @@ from tacticalVoting.Manipulation import Manipulation as Mani
 
 class Bury(object):
     @staticmethod
-    def get_voting(outcome, candidates, preferences, scheme):
+    def get_voting(outcome, candidates, preferences, happiness, scheme):
         manipulations = []
         winner = candidates[np.argsort(outcome)[-1]]
-        happiness = Hap.get_scores(outcome, candidates, preferences)
         unhappy_voters = np.where(((preferences == winner).astype(int)).argmax(axis=0) > 0)
 
         for voter_id in unhappy_voters[0].tolist():
@@ -43,13 +42,13 @@ class Bury(object):
                 outcome = scheme.get_scores(temp_pref, candidates)
                 new_happiness = Hap.get_scores(outcome, candidates, preferences)[0][voter_id]
 
-                if new_happiness > happiness[0][voter_id]:
+                if new_happiness > happiness[voter_id]:
                     manipulation = Mani("Burying",
                                         scheme.get_name(),
                                         voter_id,
                                         pref,
                                         strategic_pref,
-                                        happiness[0][voter_id],
+                                        happiness[voter_id],
                                         new_happiness,
                                         original_outcome,
                                         outcome
