@@ -17,9 +17,9 @@ def main():
     e = Can('E')
     candidates = [a, b, c, d, e]
     preferences = numpy.array([
-        [a, b, c, d, e],
-        [a, d, b, c, e],
-        [d, a, b, c, e],
+        [a, e, c, d, b],
+        [a, c, b, d, e],
+        [c, b, d, e, a],
         [b, d, c, e, a],
         [d, a, b, c, e]
     ]).T
@@ -30,7 +30,7 @@ def main():
 
     outcome = BU.get_scores(preferences, candidates)
     happiness = Hap.get_scores(outcome, candidates, preferences)
-    Com.get_scores(outcome,preferences,candidates,happiness)
+    Com.get_scores(preferences, candidates, PL)
 
 
 if __name__ == '__main__':
