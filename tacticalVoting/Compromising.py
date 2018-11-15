@@ -47,7 +47,7 @@ class Compromising:
                 if newHappyness[0][x] > score:
                     print("WARNING: Identified potential for bulletVoting for voter {}".format(x))
 
-                    manipulation = Mani("BulletVoting",
+                    manipulation = Mani("Compromising",
                                         voting_scheme.get_name(),
                                         x,
                                         preferences[x],
