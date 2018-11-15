@@ -5,6 +5,10 @@ import numpy as np
 class Burda(AbstractScheme):
 
     @staticmethod
+    def get_name():
+        return "Burda"
+
+    @staticmethod
     def get_scores(preferences, candidates):
         length = len(candidates)
         factor = np.array(list(range(length-1, -1, -1))).reshape(length, 1)

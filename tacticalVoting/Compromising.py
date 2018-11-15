@@ -5,7 +5,7 @@ from votingSchemes.Burda import Burda as BU
 
 class Compromising:
     @staticmethod
-    def get_scores(outcome, preferences, candidates, happiness):
+    def get_scores(outcome, candidates, preferences, happiness):
         happy = happiness[0]
         winner = max(happy)
         location = np.where(np.array([(winner != y).astype(int) for y in happy]) == 1)

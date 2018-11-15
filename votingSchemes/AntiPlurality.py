@@ -3,6 +3,11 @@ import numpy as np
 
 
 class AntiPlurality(AbstractScheme):
+
+    @staticmethod
+    def get_name(self):
+        return "AntiPluralityVote"
+
     @staticmethod
     def get_scores(preferences, candidates):
         voting_vector = [1] * (len(candidates))
