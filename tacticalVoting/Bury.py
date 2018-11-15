@@ -5,43 +5,31 @@ from tacticalVoting.Manipulation import Manipulation as Mani
 
 
 class Bury(object):
-    def __init__(self, outcome, candidates, preferences, scheme):
-        self.outcome = outcome
-        self.scheme = scheme
-        self.candidates = candidates
-        self.preferences = preferences
-        self.winner = candidates[np.argsort(outcome)[-1]]
-        self.happiness = Hap.get_scores(outcome, candidates, preferences)
-        self.manipulations = []
-        self.run_possibilities(preferences)
-
-    def get_voting(self):
-        return self.manipulations
-
-    def run_possibilities(self, preferences):
-        unhappy_voters = np.where(((self.preferences == self.winner).astype(int)).argmax(axis=0) > 0)
-        # possible_strategies = {}
+    @staticmethod
+    def get_voting(outcome, candidates, preferences, scheme):
+        manipulations = []
+        winner = candidates[np.argsort(outcome)[-1]]
+        happiness = Hap.get_scores(outcome, candidates, preferences)
+        unhappy_voters = np.where(((preferences == winner).astype(int)).argmax(axis=0) > 0)
 
         for voter_id in unhappy_voters[0].tolist():
-            self.possible_combinations(preferences, voter_id)
-            # possible_strategies = {**self.possible_combinations(preferences, voter_id), **possible_strategies}
+            manipulations = manipulations + Bury.possible_combinations(winner,
+                                                                       candidates,
+                                                                       preferences,
+                                                                       voter_id,
+                                                                       scheme,
+                                                                       happiness,
+                                                                       outcome)
+        return manipulations
 
-        return self.manipulations
-
-    def alter_pref(self, pref):
-        indices = np.where(pref == self.winner)
-        pref = np.append(pref, pref[indices])
-        pref = np.delete(pref, indices)
-        return [pref]
-
-    def possible_combinations(self, preferences, voter_id):
+    @staticmethod
+    def possible_combinations(winner, candidates, preferences, voter_id, scheme, happiness, original_outcome):
         temp_pref = copy.deepcopy(preferences)
         pref = preferences[:, voter_id]
-        indices = np.where(pref == self.winner)[0][0]
+        indices = np.where(pref == winner)[0][0]
         before = preferences[:, voter_id][:indices + 1]
         after = preferences[:, voter_id][indices + 1:]
-        possible_strategies = dict()
-        possible_strategies[voter_id] = []
+        manipulations = []
 
         for c in before:
             idx = np.where(pref == c)[0][0]
@@ -50,34 +38,27 @@ class Bury(object):
             index = 0
 
             while count > 0:
-                # print(voter_id, count, pref, c, np.insert(temp_list, len(pref) - index - 1, c))
                 strategic_pref = np.insert(temp_list, len(pref) - index - 1, c)
                 temp_pref[:, voter_id] = strategic_pref
-                outcome = self.get_outcome(temp_pref)
-                new_happiness = self.get_new_happiness(outcome, voter_id)
+                outcome = scheme.get_scores(temp_pref, candidates)
+                new_happiness = Hap.get_scores(outcome, candidates, preferences)[0][voter_id]
 
-                if new_happiness > self.happiness[0][voter_id]:
+                if new_happiness > happiness[0][voter_id]:
                     manipulation = Mani("Burying",
-                                        self.scheme.get_name(),
+                                        scheme.get_name(),
                                         voter_id,
                                         pref,
                                         strategic_pref,
-                                        self.happiness[0][voter_id],
+                                        happiness[0][voter_id],
                                         new_happiness,
-                                        self.outcome,
+                                        original_outcome,
                                         outcome
                                         )
-                    self.manipulations.append(manipulation)
+                    manipulations.append(manipulation)
 
                     count -= 1
                     index += 1
                     continue
                 else:
                     break
-        return possible_strategies
-
-    def get_outcome(self, preferences):
-        return self.scheme.get_scores(preferences, self.candidates)
-
-    def get_new_happiness(self, outcome, voter_id):
-        return Hap.get_scores(outcome, self.candidates, self.preferences)[0][voter_id]
+        return manipulations
