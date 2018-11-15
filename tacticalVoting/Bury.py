@@ -1,6 +1,7 @@
 import numpy as np
 from HappinessScore import HappinessScore as Hap
 import copy
+from tacticalVoting.Manipulation import Manipulation as Mani
 
 
 class Bury(object):
@@ -11,15 +12,21 @@ class Bury(object):
         self.preferences = preferences
         self.winner = candidates[np.argsort(outcome)[-1]]
         self.happiness = Hap.get_scores(outcome, candidates, preferences)
+        self.manipulations = []
+        self.run_possibilities(preferences)
+
+    def get_voting(self):
+        return self.manipulations
 
     def run_possibilities(self, preferences):
         unhappy_voters = np.where(((self.preferences == self.winner).astype(int)).argmax(axis=0) > 0)
-        possible_strategies = {}
+        # possible_strategies = {}
 
         for voter_id in unhappy_voters[0].tolist():
-            possible_strategies = {**self.possible_combinations(preferences, voter_id), **possible_strategies}
+            self.possible_combinations(preferences, voter_id)
+            # possible_strategies = {**self.possible_combinations(preferences, voter_id), **possible_strategies}
 
-        return possible_strategies
+        return self.manipulations
 
     def alter_pref(self, pref):
         indices = np.where(pref == self.winner)
@@ -44,18 +51,24 @@ class Bury(object):
 
             while count > 0:
                 # print(voter_id, count, pref, c, np.insert(temp_list, len(pref) - index - 1, c))
-                temp_pref[:, voter_id] = np.insert(temp_list, len(pref) - index - 1, c)
+                strategic_pref = np.insert(temp_list, len(pref) - index - 1, c)
+                temp_pref[:, voter_id] = strategic_pref
                 outcome = self.get_outcome(temp_pref)
                 new_happiness = self.get_new_happiness(outcome, voter_id)
 
                 if new_happiness > self.happiness[0][voter_id]:
-                    temp_dict = {
-                        "new_pref": np.insert(temp_list, count, c),
-                        "happiness": new_happiness,
-                        "old_happiness": self.happiness[0][voter_id]
-                    }
+                    manipulation = Mani("Burying",
+                                        self.scheme.get_name(),
+                                        voter_id,
+                                        pref,
+                                        strategic_pref,
+                                        self.happiness[0][voter_id],
+                                        new_happiness,
+                                        self.outcome,
+                                        outcome
+                                        )
+                    self.manipulations.append(manipulation)
 
-                    possible_strategies.get(voter_id).append(temp_dict)
                     count -= 1
                     index += 1
                     continue
