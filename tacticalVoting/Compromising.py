@@ -1,53 +1,48 @@
 import numpy as np
 from HappinessScore import HappinessScore as Hap
-from votingSchemes.Burda import Burda as BU
+from tacticalVoting.Manipulation import Manipulation as Mani
 
 
 class Compromising:
     @staticmethod
-    def get_scores(outcome, candidates, preferences, happiness):
-        happy = happiness[0]
-        winner = max(happy)
-        location = np.where(np.array([(winner != y).astype(int) for y in happy]) == 1)
-        index = [(winner == y).astype(int) for y in happy].index(1)
-        can = preferences.T[index][0]
+    def get_voting(outcome, candidates, preferences, happiness, voting_scheme):
+        (m, n) = preferences.shape
+        winner = candidates[np.argmax(outcome)]
+        # get indices of dissatisfied voters
+        indices_dissat = np.argwhere(happiness < m-2).flatten()
         preferences = preferences.T
-        newPref = [0] * len(preferences)
-        hapScore = [0] * len(preferences)
-        outcomeList = [0] * len(preferences)
-        changed = [0] * len(location)
-        betterScore = False
+        newPref = [0] * preferences.shape[0]
+        outcomeList = [0] * preferences.shape[0]
+        manipulations = []
 
-        for x in location[0]:
+        for x in indices_dissat:
             newPref[x] = preferences[0].tolist()
-            winner_index = (preferences[x].tolist()).index(can)
+            winner_index = (preferences[x].tolist()).index(winner)
             first_pref = preferences[x][0]
-            hapScore[x] = Hap.get_scores(outcome, candidates, preferences.T)[0][x]
+            score = Hap.get_scores(outcome, candidates, preferences.T)[0][x]
             outcomeList[x] = outcome
             for i in range(1, winner_index):
                 if i == winner_index:
                     continue
                 preferences[x][0] = preferences[x][i]
                 preferences[x][i] = first_pref
-                new_outcome = BU.get_scores(preferences.T, candidates)
+                new_outcome = voting_scheme.get_scores(preferences.T, candidates)
                 prefTemp = preferences[x].tolist()
-
                 preferences[x][i] = preferences[x][0]
                 preferences[x][0] = first_pref
                 newHappyness = Hap.get_scores(new_outcome, candidates, preferences.T)
+                if newHappyness[0][x] > score:
+                    print("WARNING: Identified potential for bulletVoting for voter {}".format(x))
 
-                if newHappyness[0][x] > hapScore[x]:
-                    changed = changed + location[0][x]
-                    hapScore[x] = newHappyness[0][x]
-                    newPref[x] = prefTemp
-                    outcomeList[x] = new_outcome
-                    betterScore = True
-
-
-        if betterScore:
-            for x in changed:
-                print("Voter", x+1, "has a happyness score of", hapScore[x], "and uses the preference", newPref[x], "the new results are", outcomeList[x])
-
-
-
+                    manipulation = Mani("Compromising",
+                                        voting_scheme.get_name(),
+                                        x,
+                                        preferences[x],
+                                        prefTemp,
+                                        score,
+                                        newHappyness[0][x],
+                                        outcome,
+                                        new_outcome
+                                        )
+                    manipulations.append(manipulation)
         return 0

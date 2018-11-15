@@ -4,24 +4,26 @@ from tacticalVoting.Manipulation import Manipulation as Mani
 
 
 class BulletVoting(object):
-    @staticmethod
-    def get_voting(outcome, candidates, preferences, happiness, voting_scheme):
+    debug_output = False
+
+    @classmethod
+    def get_voting(cls, outcome, candidates, preferences, happiness, voting_scheme):
         (m, n) = preferences.shape
 
-        # get indices of satisfied voters
-        indices_sat = np.argwhere(happiness == m-1).flatten()
         # get indices of dissatisfied voters
-        indices_dissat = np.setdiff1d(np.array(range(0, n)), indices_sat)
+        indices_dissat = np.argwhere(happiness < m-1).flatten()
 
-        # Debug output TODO: remove...
-        print("\nOutcome")
-        print(outcome)
-        print("\nPreferences")
-        print(preferences)
-        print()
+        # Debug output
+        if cls.debug_output:
+            print("\nOutcome")
+            print(outcome)
+            print("\nPreferences")
+            print(preferences)
+            print()
 
         manipulations = []
 
+        # for each voter check if bullet voting increases happiness
         for voter in indices_dissat:
             prefs = preferences.copy()
             bullet_prefs = np.array([preferences[:, voter][0]] * m)
@@ -29,6 +31,7 @@ class BulletVoting(object):
             # set everything to 0 except first position
             bullet_prefs[1:] = 0
 
+            # insert bullet preferences in preference matrix
             prefs[:, voter] = bullet_prefs
 
             # get new score
@@ -37,18 +40,17 @@ class BulletVoting(object):
             # calculate new happiness
             (new_happiness, new_happiness_sum) = Hap.get_scores(new_score, candidates, preferences)
 
-            print("Voter: {}".format(voter))
-            print("Old happiness: {}".format(happiness[voter]))
-            print("New happiness: {}".format(new_happiness[voter]))
+            if cls.debug_output:
+                print("Voter: {}".format(voter))
+                print("Old happiness: {}".format(happiness[voter]))
+                print("New happiness: {}".format(new_happiness[voter]))
 
             if new_happiness[voter] > happiness[voter]:
-                print("WARNING: Identified potential for bulletVoting for voter {}".format(voter))
-
                 manipulation = Mani("BulletVoting",
                                     voting_scheme.get_name(),
                                     voter,
-                                    preferences[voter],
-                                    prefs[voter],
+                                    preferences,
+                                    prefs,
                                     happiness[voter],
                                     new_happiness[voter],
                                     outcome,
