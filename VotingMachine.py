@@ -5,7 +5,7 @@ from votingSchemes.VotingForTwo import VotingForTwo as VoFoTwo
 
 from tacticalVoting.BulletVoting import BulletVoting as BuVo
 from tacticalVoting.Compromising import Compromising as Com
-from tacticalVoting.Compromising import Compromising as Bury
+from tacticalVoting.Bury import Bury as Bury
 
 from HappinessScore import HappinessScore as Hap
 
