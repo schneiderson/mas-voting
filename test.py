@@ -1,30 +1,31 @@
 from VotingMachine import VotingMachine as VoMa
 from Candidate import Candidate as Can
 import numpy
+import pickle
 
 
 def main():
     # candidates
-    a = Can('A')
-    b = Can('B')
-    c = Can('C')
-    d = Can('D')
-    e = Can('E')
+    # a = Can('A')
+    # b = Can('B')
+    # c = Can('C')
+    # d = Can('D')
+    # e = Can('E')
 
-    candidates = [a, b, c, d, e]
+    with open('candidates.pck', 'rb') as pref_file:
+        candidates = pickle.load(pref_file)
 
-    preferences = numpy.array([
-        [a, e, c, d, b],
-        [a, c, b, d, e],
-        [c, b, d, e, a],
-        [b, d, c, e, a],
-        [b, d, c, e, a],
-        [d, a, b, c, e]
-    ]).T
+    with open('preferences.pck', 'rb') as pref_file:
+        preferences = numpy.array(pickle.load(pref_file)).T
+
+    print("Candidates")
+    print(candidates)
+    print("Preferences")
+    print(preferences)
 
     num_voters = preferences.shape[1]
     num_candidates = preferences.shape[0]
-
+    
     voting_machine = VoMa(preferences, candidates)
     manipulations = voting_machine.get_manipulations()
 
