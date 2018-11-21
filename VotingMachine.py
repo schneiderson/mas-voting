@@ -14,6 +14,8 @@ class VotingMachine(object):
 
     voting_schemes = [PluVo, Burda, AntiPluVo, VoFoTwo]
     strategies = [BuVo, Com, Bury]
+    outcomes = {}
+    happinesses = {}
 
     def __init__(self, preferences, candidates):
         self.preferences = preferences
@@ -31,5 +33,9 @@ class VotingMachine(object):
 
                 new_manipulations = strategy.get_voting(outcome, self.candidates, self.preferences, happiness, vs)
                 manipulations.extend(new_manipulations)
+
+            self.outcomes[vs.get_name()] = outcome
+            self.happinesses[vs.get_name()] = happiness
+
 
         return manipulations

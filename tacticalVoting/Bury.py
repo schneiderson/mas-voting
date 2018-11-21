@@ -49,16 +49,17 @@ class Bury(object):
                 strategic_pref = np.insert(temp_list, len(pref) - index - 1, c)
                 temp_pref[:, voter_id] = strategic_pref
                 outcome = scheme.get_scores(temp_pref, candidates)
-                new_happiness = Hap.get_scores(outcome, candidates, preferences)[0][voter_id]
+                new_happiness = Hap.get_scores(outcome, candidates, preferences)[0]
 
                 # if the happiness is not better than the next iterations wont make it any better
-                if new_happiness > happiness[voter_id]:
+                if new_happiness[voter_id] > happiness[voter_id]:
                     manipulation = Mani("Burying",
                                         scheme.get_name(),
                                         voter_id,
                                         pref,
                                         strategic_pref,
                                         happiness[voter_id],
+                                        new_happiness[voter_id],
                                         new_happiness,
                                         original_outcome,
                                         outcome

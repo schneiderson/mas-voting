@@ -50,9 +50,10 @@ class BulletVoting(object):
                                     voting_scheme.get_name(),
                                     voter,
                                     preferences,
-                                    prefs,
+                                    prefs[:, voter],
                                     happiness[voter],
                                     new_happiness[voter],
+                                    new_happiness,
                                     outcome,
                                     new_score
                                     )

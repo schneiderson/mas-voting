@@ -37,10 +37,11 @@ class Compromising:
                     manipulation = Mani("Compromising",
                                         voting_scheme.get_name(),
                                         voter,
-                                        preferences,
-                                        new_preferences,
+                                        preferences.T,
+                                        new_preferences.T[:, voter],
                                         happiness[voter],
                                         newHappiness[voter],
+                                        newHappiness,
                                         outcome,
                                         new_outcome
                                         )
