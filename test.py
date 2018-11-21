@@ -12,16 +12,11 @@ def main():
     # d = Can('D')
     # e = Can('E')
 
-    with open('candidates.pck', 'rb') as pref_file:
+    with open('data/candidates.pck', 'rb') as pref_file:
         candidates = pickle.load(pref_file)
 
-    with open('preferences.pck', 'rb') as pref_file:
+    with open('data/preferences.pck', 'rb') as pref_file:
         preferences = numpy.array(pickle.load(pref_file)).T
-
-    print("Candidates")
-    print(candidates)
-    print("Preferences")
-    print(preferences)
 
     num_voters = preferences.shape[1]
     num_candidates = preferences.shape[0]
@@ -61,7 +56,6 @@ def main():
 
             print("")
 
-
     for m in manipulations:
         if mani_per_vs.keys().__contains__(m.voting_scheme):
             mani_per_vs[m.voting_scheme] += 1
@@ -70,9 +64,7 @@ def main():
 
     num_all_mani = len(manipulations)
 
-
     # Print the results
-
     print("Manipulations overall: \n{}".format(num_all_mani))
 
     for mani, key in enumerate(mani_per_vs.keys()):
@@ -80,8 +72,6 @@ def main():
         print(key)
         print("manipulations: {}".format(mani_per_vs[key]))
         print("score: {}".format(mani_per_vs[key]/num_voters))
-
-
 
 
 if __name__ == '__main__':
