@@ -3,10 +3,17 @@ import random
 from Candidate import Candidate as Can
 import numpy
 
+# -----------------------------------------
+# ------------ Parameters -----------------
+# -----------------------------------------
 SIZE_CANDIDATES = 5
 SIZE_VOTERS = 100
 PROBABILISTIC_DISTRIBUTION = True
 
+
+# ----------------------------------------
+# ------ Preference Generation -----------
+# ----------------------------------------
 candidates = []
 preferences = []
 
