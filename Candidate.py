@@ -18,4 +18,4 @@ class Candidate(object):
 
     def __eq__(self, other):
 
-        return (isinstance(other, Candidate) and self.name == other.name)
+        return isinstance(other, Candidate) and self.name == other.name

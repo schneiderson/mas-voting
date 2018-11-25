@@ -3,9 +3,9 @@ import random
 from Candidate import Candidate as Can
 import numpy
 
-SIZE_CANDIDATES = 10
-SIZE_VOTERS = 10
-PROBABILISTIC_DISTRIBUTION = False
+SIZE_CANDIDATES = 5
+SIZE_VOTERS = 100
+PROBABILISTIC_DISTRIBUTION = True
 
 candidates = []
 preferences = []
@@ -33,10 +33,10 @@ file_name = 'preferences.pck'
 
 for i in range(SIZE_VOTERS):
     if PROBABILISTIC_DISTRIBUTION:
-        temp_pref = numpy.random.choice(candidates, 10, p=weights_candidates, replace=False)
+        temp_pref = numpy.random.choice(candidates, len(candidates), p=weights_candidates, replace=False)
         file_name = 'preferences_prob.pck'
     else:
-        temp_pref = numpy.random.choice(candidates, 10, replace=False)
+        temp_pref = numpy.random.choice(candidates, len(candidates), replace=False)
 
     preferences.append(temp_pref)
     print(temp_pref)

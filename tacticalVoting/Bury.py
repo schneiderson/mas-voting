@@ -12,7 +12,7 @@ class Bury(object):
         winner = candidates[np.argsort(outcome)[-1]]
         unhappy_voters = np.where(((preferences == winner).astype(int)).argmax(axis=0) > 0)
 
-        # for each voter who didnt get their first preference
+        # for each voter who didn't get their first preference
         for voter_id in unhappy_voters[0].tolist():
             manipulations = manipulations + Bury.possible_combinations(winner,
                                                                        candidates,

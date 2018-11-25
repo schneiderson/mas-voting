@@ -6,11 +6,12 @@ class Burda(AbstractScheme):
 
     @staticmethod
     def get_name():
-        return "Burda"
+        return "Borda"
 
     @staticmethod
     def get_scores(preferences, candidates):
         length = len(candidates)
-        factor = np.array(list(range(length-1, -1, -1))).reshape(length, 1)
-        return [((preferences == y).astype(int) * factor).sum() for y in candidates]
+        voting_vector = np.array(list(range(length-1, -1, -1))).reshape(length, 1)
+
+        return [((preferences == y).astype(int) * voting_vector).sum() for y in candidates]
 

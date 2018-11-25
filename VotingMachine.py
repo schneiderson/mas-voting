@@ -1,8 +1,7 @@
 from votingSchemes.PluralityVote import PluralityVote as PluVo
-from votingSchemes.Burda import Burda as Burda
+from votingSchemes.Borda import Burda as Burda
 from votingSchemes.AntiPlurality import AntiPlurality as AntiPluVo
 from votingSchemes.VotingForTwo import VotingForTwo as VoFoTwo
-
 from tacticalVoting.BulletVoting import BulletVoting as BuVo
 from tacticalVoting.Compromising import Compromising as Com
 from tacticalVoting.Bury import Bury as Bury
@@ -24,11 +23,13 @@ class VotingMachine(object):
     def get_manipulations(self):
         manipulations = []
 
+        # get manipulations for each voting scheme
         for _, vs in enumerate(self.voting_schemes):
 
             outcome = vs.get_scores(self.preferences, self.candidates)
             (happiness, happiness_sum) = Hap.get_scores(outcome, self.candidates, self.preferences)
 
+            # apply each strategy and find manipulations
             for _, strategy in enumerate(self.strategies):
 
                 new_manipulations = strategy.get_voting(outcome, self.candidates, self.preferences, happiness, vs)
@@ -36,6 +37,5 @@ class VotingMachine(object):
 
             self.outcomes[vs.get_name()] = outcome
             self.happinesses[vs.get_name()] = happiness
-
 
         return manipulations

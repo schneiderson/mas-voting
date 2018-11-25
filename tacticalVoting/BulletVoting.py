@@ -4,7 +4,6 @@ from tacticalVoting.Manipulation import Manipulation as Mani
 
 
 class BulletVoting(object):
-    debug_output = False
 
     @classmethod
     def get_voting(cls, outcome, candidates, preferences, happiness, voting_scheme):
@@ -12,14 +11,6 @@ class BulletVoting(object):
 
         # get indices of dissatisfied voters
         indices_dissat = np.argwhere(happiness < m-1).flatten()
-
-        # Debug output
-        if cls.debug_output:
-            print("\nOutcome")
-            print(outcome)
-            print("\nPreferences")
-            print(preferences)
-            print()
 
         manipulations = []
 
@@ -39,11 +30,6 @@ class BulletVoting(object):
 
             # calculate new happiness
             (new_happiness, new_happiness_sum) = Hap.get_scores(new_score, candidates, preferences)
-
-            if cls.debug_output:
-                print("Voter: {}".format(voter))
-                print("Old happiness: {}".format(happiness[voter]))
-                print("New happiness: {}".format(new_happiness[voter]))
 
             if new_happiness[voter] > happiness[voter]:
                 manipulation = Mani("BulletVoting",
